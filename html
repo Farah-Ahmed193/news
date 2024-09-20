@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQL Injection</title>
+</head>
+<body>
+    <h1>Login Page (Vulnerable to SQL Injection)</h1>
+    <form method="POST">
+        <label>Username:</label>
+        <input type="text" name="username" /><br />
+        <label>Password:</label>
+        <input type="password" name="password" /><br />
+        <button type="submit">Login</button>
+    </form>
+
+    <?php
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+        $conn = new mysqli("localhost", "root", "", "test_db");
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        // Vulnerable to SQL Injection
+        $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+        $result = $conn->query($query);
+
+        if ($result && $result->num_rows > 0) {
+            echo "Login successful!";
+        } else {
+            echo "Invalid login!";
+        }
+    }
+    ?>
+</body>
+</html>
